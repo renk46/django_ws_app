@@ -81,8 +81,8 @@ class AuthConsumer(BaseConsumer):
         """Find user in authenticator"""
         module_settings = getattr(settings, "EVENT_SUBSCRIPTION_SERVER", None)
         attr = getattr(
-            module_settings, "DEFAULT_AUTHENTICATOR", "ws.authenticators.JWTAuthenticator"
-        ) if module_settings else "ws.authenticators.JWTAuthenticator"
+            module_settings, "DEFAULT_AUTHENTICATOR", "django_ws_app.authenticators.JWTAuthenticator"
+        ) if module_settings else "django_ws_app.authenticators.JWTAuthenticator"
         authenticator: AuthenticatorInterface = str_to_class(attr)()
         return authenticator.find_user(data)
 
