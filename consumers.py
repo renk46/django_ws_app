@@ -86,14 +86,20 @@ class AuthConsumer(BaseConsumer):
         authenticator: AuthenticatorInterface = str_to_class(attr)()
         return authenticator.find_user(data)
 
+    def add_user_to_group(self, user):
+        """Add user to group"""
+        async_to_sync(self.channel_layer.group_add)(str(user.id), self.channel_name)
+
     def handle_auth_context(self, message):
         """Handler for incoming messages"""
         manager = Manager()
         try:
             manager.remove_consumer(self)
-            async_to_sync(login)(self.scope, self.find_user(message))
+            user = self.find_user(message)
+            async_to_sync(login)(self.scope, user)
             manager.add_consumer(self)
             self.auth_success()
+            self.add_user_to_group(user)
         except InvalidCredentials:
             self.auth_error()
         except InvalidToken:

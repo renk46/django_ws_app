@@ -27,6 +27,22 @@ def send_group(channel: str, response: Response):
         "payload_data": json.dumps(response.get_obj(), default=str),
     })
 
+def send_user(user, data):
+    """Send data to user
+
+    :param user: User record
+    :type user: User
+    :param data: Data (json)
+    :type data: dict
+    """
+    data = SuccessResponse("EVENT", data)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(str(user.id), {
+        "type": "send_payload_event",
+        "payload_type": MessageTypes.DATA.value,
+        "payload_data": json.dumps(data.get_obj(), default=str),
+    })
+
 def get_handler_name(message):
     """get handler name"""
     return message["request"].replace(" ", "_").lower()
