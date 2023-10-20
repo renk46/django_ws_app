@@ -9,6 +9,7 @@ class Manager():
 
     def add_consumer(self, consumer):
         """Add consumer"""
+        if "user" not in consumer.scope: return
         self.consumers.append({
             "user": consumer.scope["user"],
             "consumer": consumer
@@ -16,6 +17,7 @@ class Manager():
 
     def remove_consumer(self, consumer):
         """Remove consumer"""
+        if "user" not in consumer.scope: return
         self.consumers.remove({
             "user": consumer.scope["user"],
             "consumer": consumer

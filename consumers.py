@@ -107,8 +107,9 @@ class AuthConsumer(BaseConsumer):
 
     def check_is_session_authenticated_response(self):
         """Check session authentication"""
-        if self.scope["user"].is_authenticated:
+        if "user" in self.scope and self.scope["user"].is_authenticated:
             self.auth_success()
+            self.add_user_to_group(self.scope["user"])
         else:
             self.auth_unknown()
 
